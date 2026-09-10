@@ -1,0 +1,9 @@
+[submodule "lib/skyblock-shared-models"]
+	path = lib/skyblock-shared-models
+	url = git@github.com:jaron2668/SkyblockSharedModels.git
+[submodule "services/skyblock-updater"]
+	path = services/skyblock-updater
+	url = git@github.com:jaron2668/SkyblockUpdater.git
+[submodule "services/skyblock-flipper"]
+	path = services/skyblock-flipper
+	url = git@github.com:jaron2668/SkyblockFlipper.git
