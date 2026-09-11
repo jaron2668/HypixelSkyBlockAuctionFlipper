@@ -1,4 +1,4 @@
-# Hypixel SkyBlock Backend
+# Hypixel SkyBlock Auction Flipper
 
 This repository is the main project for a set of backend services used to collect Hypixel SkyBlock auction data and pass it to consumers that analyse potential flips. The shared models library, updater, and flipper are maintained as Git submodules.
 
@@ -37,8 +37,8 @@ The flipper implementation is intentionally incomplete in this repository. The p
 Clone the main repository together with its submodules:
 
 ```bash
-git clone --recurse-submodules https://github.com/jaron2668/HypixelSkyblockBackend.git
-cd HypixelSkyblockBackend
+git clone --recurse-submodules https://github.com/jaron2668/HypixelSkyBlockAuctionFlipper.git
+cd HypixelSkyBlockAuctionFlipper
 ```
 
 If the main repository was already cloned without its submodules, initialize them with:
@@ -65,27 +65,6 @@ docker compose up --build
 
 This starts Redpanda, PostgreSQL, the updater, and the flipper template. The first updater run loads the current auction data. New and ended auction events are then published for downstream consumers.
 
-## Building the submodules
-
-The services use the shared models artifact as a local Maven dependency. Build and install the library first, then build the services:
-
-```bash
-cd lib/skyblock-shared-models
-mvn clean install
-```
-
-Then build either service from its own directory:
-
-```bash
-cd services/skyblock-updater
-mvn clean verify
-
-cd ../skyblock-flipper
-mvn clean verify
-```
-
-Each submodule has its own README with details about its responsibilities, events, and local build requirements.
-
 ## Runtime details
 
 Kafka is available to the containers at `redpanda:9092`. PostgreSQL is available to the containers at `postgres_db:5432` and is exposed on `127.0.0.1:5432` for local access. The Redpanda admin API is not exposed by default.
@@ -103,6 +82,27 @@ View service output with commands such as:
 docker logs -f skyblock-updater
 docker logs -f skyblock-flipper
 ```
+
+## Building the submodules without Docker
+
+The services use the shared models artifact as a local Maven dependency. If you don't want to use Docker for any reason build and install the library first, then build the services:
+
+```bash
+cd lib/skyblock-shared-models
+mvn clean install
+```
+
+Then build either service from its own directory:
+
+```bash
+cd services/skyblock-updater
+mvn clean verify
+
+cd ../skyblock-flipper
+mvn clean verify
+```
+
+Each submodule has its own README with details about its responsibilities, events, and local build requirements.
 
 ## License
 
