@@ -1,12 +1,12 @@
 # Hypixel SkyBlock Auction Flipper
 
-This repository is the main project for a set of backend services used to collect Hypixel SkyBlock auction data and pass it to consumers that analyse potential flips. The shared models library, updater, and flipper are maintained as Git submodules.
+This repository is the main project for a set of backend services and a Minecraft Fabric mod used to collect Hypixel SkyBlock auction data, analyse potential flips, and display them in-game. The shared models library, updater, flipper and the mod are maintained as Git submodules.
 
 The services communicate through Kafka-compatible topics. PostgreSQL stores auction data, while the shared models library keeps the message formats consistent between services.
 
 ## Repository structure
 
-The three directories marked as submodules are separate repositories checked out at fixed commits by this main repository.
+The four directories marked as submodules are separate repositories checked out at fixed commits by this main repository.
 
 ```text
 HypixelSkyblockBackend/
@@ -15,6 +15,8 @@ HypixelSkyblockBackend/
 ├── services/
 │   ├── skyblock-updater/         # Git submodule: auction data ingestion
 │   └── skyblock-flipper/         # Git submodule: flip-analysis template
+├── mod/
+│   └── skyblock-auction-mod/      # Fabric client mod for displaying flips
 ├── docker-compose.yml
 ├── .env                          # local database overrides, optional
 └── README.md
@@ -23,6 +25,7 @@ HypixelSkyblockBackend/
 -   `lib/skyblock-shared-models` - Shared Java models used in Kafka messages.
 -   `services/skyblock-updater` - Fetches auction data from the Hypixel API, stores it in PostgreSQL, and publishes auction events.
 -   `services/skyblock-flipper` - A template service that consumes auction events and publishes flip events after a private flip engine has been added.
+-   `mod/skyblock-auction-mod` - A Fabric client mod that consumes `flipper-newflip` and displays clickable flip notifications in Minecraft chat.
 -   `docker-compose.yml` - Starts PostgreSQL, Redpanda, and the backend services together.
 
 The flipper implementation is intentionally incomplete in this repository. The private implementation of `FlipperEngineService` is not included and must be supplied separately before the service can provide useful flip results.
@@ -31,8 +34,11 @@ The flipper implementation is intentionally incomplete in this repository. The p
 
 -   Docker and Docker Compose
 -   Java 21 and Maven, when building a module outside Docker
+-   Java 25, Minecraft 26.1.2, and Fabric, when building or running the auction mod
 
 ## Quick start
+
+### Backend
 
 Clone the main repository together with its submodules:
 
@@ -63,7 +69,13 @@ Build and start the stack:
 docker compose up --build
 ```
 
-This starts Redpanda, PostgreSQL, the updater, and the flipper template. The first updater run loads the current auction data. New and ended auction events are then published for downstream consumers.
+This starts Redpanda, PostgreSQL, the updater, and the flipper template. The first updater run loads the current auction data. New and ended auction events are then published for downstream consumers, including the auction mod when it is running locally.
+
+### Fabric mod
+
+Build the fabric mod and configure Kafka. See the [mod README](mod/skyblock-auction-mod/README.md) for the complete client setup and Kafka configuration.
+
+Then start Minecraft with Fabric and the built mod. The mod connects to Kafka when the client starts and shuts down the consumer gracefully when the client exits.
 
 ## Runtime details
 
@@ -75,6 +87,8 @@ The main Kafka topics are:
 -   `updater-endedauction` - The UUID of an auction that has ended.
 -   `flipper-newflip` - A flip identified by the private flipper implementation.
 -   `flipper-endedflip` - The UUID of a flip whose auction has ended.
+
+For local Minecraft clients, Kafka is exposed at `localhost:19092`. The auction mod consumes `flipper-newflip`, displays the item name and estimated profit in chat, and links to the auction with `/ah view <auctionUuid>`.
 
 View service output with commands such as:
 

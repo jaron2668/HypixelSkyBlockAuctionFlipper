@@ -7,3 +7,6 @@
 [submodule "services/skyblock-flipper"]
 	path = services/skyblock-flipper
 	url = git@github.com:jaron2668/SkyblockFlipper.git
+[submodule "mod/skyblock-auction-mod"]
+	path = mod/skyblock-auction-mod
+	url = git@github.com:jaron2668/SkyBlockAuctionMod.git
