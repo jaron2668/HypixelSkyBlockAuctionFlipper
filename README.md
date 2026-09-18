@@ -120,7 +120,9 @@ Each submodule has its own README with details about its responsibilities, event
 
 ## License
 
-See [LICENSE.txt](LICENSE.txt) and the third-party license files included with each submodule.
+This project is licensed under the GNU General Public License v3.0 only (GPL-3.0-only).
+
+See LICENSE.txt included with each submodule for more details.
 
 ## Disclaimer
 
