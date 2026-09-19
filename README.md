@@ -99,7 +99,7 @@ docker logs -f skyblock-flipper
 
 ## Building the submodules without Docker
 
-The services resolve `io.github.jaron2668:skyblock-shared-models:x.x.x` from GitHub Packages. Build either service directly from its own directory:
+The services resolve the shared model lib from JitPack. Build either service directly from its own directory:
 
 ```bash
 cd services/skyblock-updater
