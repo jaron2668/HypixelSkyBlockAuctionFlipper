@@ -6,7 +6,7 @@ The services communicate through Kafka-compatible topics. PostgreSQL stores auct
 
 ## Repository structure
 
-The four directories marked as submodules are separate repositories checked out at fixed commits by this main repository.
+The four directories marked as submodules are separate repositories checked out at fixed commits by this main repository. The backend projects consume the shared models artifact from GitHub Packages; the shared-models submodule is only needed when developing or publishing that library itself.
 
 ```text
 HypixelSkyblockBackend/
@@ -99,14 +99,7 @@ docker logs -f skyblock-flipper
 
 ## Building the submodules without Docker
 
-The services use the shared models artifact as a local Maven dependency. If you don't want to use Docker for any reason build and install the library first, then build the services:
-
-```bash
-cd lib/skyblock-shared-models
-mvn clean install
-```
-
-Then build either service from its own directory:
+The services resolve `io.github.jaron2668:skyblock-shared-models:x.x.x` from GitHub Packages. Build either service directly from its own directory:
 
 ```bash
 cd services/skyblock-updater
